@@ -1,52 +1,42 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import Greet from "./components/Greet.vue";
-</script>
-
 <template>
-  <div class="container">
-    <h1>Welcome to Tauri!</h1>
-
-    <div class="row">
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-      <a href="https://tauri.app" target="_blank">
-        <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
-    </div>
-
-    <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
-
-    <p>
-      Recommended IDE setup:
-      <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>
-      +
-      <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-      +
-      <a href="https://github.com/tauri-apps/tauri-vscode" target="_blank"
-        >Tauri</a
-      >
-      +
-      <a href="https://github.com/rust-lang/rust-analyzer" target="_blank"
-        >rust-analyzer</a
-      >
-    </p>
-
-    <Greet />
-  </div>
+  <el-container class="unselectable">
+    <el-main>
+      <SystemMonitor/>
+    </el-main>
+  </el-container>
 </template>
 
-<style scoped>
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
+<script setup lang="ts">
+import {appWindow} from "@tauri-apps/api/window"
+import {listen,TauriEvent} from "@tauri-apps/api/event"
+import {onMounted,onUnmounted,reactive} from "vue"
+import {invoke} from "@tauri-apps/api/tauri"
+import SystemMonitor from './components/SystemMonitor.vue'
+
+function flushTray() {
+  invoke<boolean>("update_tray_title",{})
+  return flushTray
 }
 
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #249b73);
+const unListens = reactive({
+  blur:()=>{}
+})
+onMounted(async ()=> {
+  unListens.blur = await listen(TauriEvent.WINDOW_BLUR,async (event) => {
+    if (event.windowLabel == 'main') {
+      appWindow.hide()
+    }
+  })
+
+  setInterval(flushTray(),5000)
+})
+onUnmounted(()=> {
+  unListens.blur()
+})
+</script>
+
+<style scoped>
+.el-main {
+  padding: 8px;
 }
 </style>

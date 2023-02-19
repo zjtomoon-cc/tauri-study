@@ -63,11 +63,19 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 712,
         "resizable": true,
-        "title": "hello-tauri",
-        "width": 800
+        "title": "system-monitor",
+        "width": 450,
+        "decorations": false,
+        "transparent": true,
+        "visible": false
       }
-    ]
+    ],
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
+    "macOSPrivateApi": true
   }
 }

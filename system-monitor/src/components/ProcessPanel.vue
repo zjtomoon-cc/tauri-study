@@ -17,6 +17,7 @@
   import {ProcessData} from "../assets/ts/monitor"
   import {processOption} from "../assets/ts/options/options";
   import {EChartsType} from 'echarts/core'
+  import {useDark} from '@vueuse/core'
   provide(THEME_KEY,'blue')
   const processChart = ref<EChartsType>()
 

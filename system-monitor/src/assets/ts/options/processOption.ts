@@ -46,7 +46,7 @@ export const processOption = {
     series:[
         {
             label:{
-                show:false,
+                show:true,
                 formatter:'{@[1]}',
                 position:'insideLeft',
                 color:'#E5EAF3',
